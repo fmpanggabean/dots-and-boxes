@@ -25,7 +25,6 @@ namespace DotsAndBoxes.Gameplay {
                     if (gameManager.boxes[y, x].IsAllConnected()) {
                         Debug.Log("Box formed");
                         gameManager.boxes[y, x].isCounted = true;
-                        break;
                     }
                 }
             }
