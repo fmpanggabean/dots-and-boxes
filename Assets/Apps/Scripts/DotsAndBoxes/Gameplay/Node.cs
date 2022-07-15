@@ -8,9 +8,12 @@ namespace DotsAndBoxes.Gameplay
     public class Node : MonoBehaviour
     {
         public List<Node> connectionList;
+        public List<Node> allowedConnection;
 
         private LineRenderer[] lineRenderer;
         private int currentLine;
+
+        public event Action<Node, Node> OnConnect;
 
         private void Awake() {
             lineRenderer = GetComponentsInChildren<LineRenderer>();
@@ -24,18 +27,37 @@ namespace DotsAndBoxes.Gameplay
         internal void DrawLineTo(Vector3 position) {
             lineRenderer[currentLine].SetPosition(1, position);
         }
+
+        internal void AddAllowedConnection(Node node) {
+            allowedConnection.Add(node);
+        }
+
+        internal void SetPosition(Vector3 position) {
+            transform.position = position;
+        }
+
         internal void DrawLineTo(Node nodeEnd) {
             lineRenderer[currentLine].SetPosition(1, nodeEnd.GetPosition());
         }
 
         internal bool IsAvailableToConnectTo(Node endNode) {
-            if (connectionList.Contains(endNode)) {
+            if (HasConnectionWith(endNode)) {
+                Debug.Log("Unable to connect. Node already has this connection.");
                 return false;
             } 
-            if (endNode.connectionList.Contains(this)) {
+            if (endNode.HasConnectionWith(this)) {
+                Debug.Log("Unable to connect. Node already has this connection.");
+                return false;
+            }
+            if (!allowedConnection.Contains(endNode)) {
+                Debug.Log("Unable to connect. Node connection not allowed.");
                 return false;
             }
             return true;
+        }
+
+        public bool HasConnectionWith(Node node) {
+            return connectionList.Contains(node);
         }
 
         internal void AddConnection(Node endNode) {
@@ -43,6 +65,7 @@ namespace DotsAndBoxes.Gameplay
             connectionList.Add(endNode);
             endNode.connectionList.Add(this);
 
+            OnConnect?.Invoke(this, endNode);
             MoveToNextLineRenderer();
         }
 

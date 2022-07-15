@@ -24,6 +24,8 @@ namespace DotsAndBoxes.Gameplay
                     if (startNode.IsAvailableToConnectTo(endNode)) {
                         startNode.DrawLineTo(endNode);
                         startNode.AddConnection(endNode);
+                    } else {
+                        startNode.CancelLine();
                     }
                 } else if (startNode && !endNode) {
                     startNode.CancelLine();
