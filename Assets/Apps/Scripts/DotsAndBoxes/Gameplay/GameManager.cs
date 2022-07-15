@@ -1,74 +1,50 @@
-using System;
+﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace DotsAndBoxes.Gameplay
-{
-    public class GameManager : MonoBehaviour
-    {
-        public int width;
-        public int height;
-        [SerializeField] private GameObject nodePrefab;
-        public Node[,] nodes;
-        public Box[,] boxes;
+namespace DotsAndBoxes.Gameplay {
+    public class GameManager : MonoBehaviour {
+        public ScoreManager scoreManager;
+        public PlayerTurn turn;
+        public Board board;
 
-        private void Awake() {
-            nodes = new Node[height, width];
-            boxes = new Box[height - 1, width - 1];
+        private bool isPlaying;
 
-            GenerateNode();
-            GenerateBox();
-            RegisterAllowedConnection();
+        public event Action<PlayerLabel> OnPlayerTurnSet;
+
+        public GameManager () {
+            turn = new PlayerTurn();
+        }
+        private void Start() {
+            isPlaying = false;
+            board.RegisterNextTurnEvent(turn.NextTurn);
+            board.OnBoxFormed += GainScore;
+            board.OnFullBoard += GameOver;
+            SetPlayerTurn();
         }
 
-        private void GenerateBox() {
-            for (int y=0; y<height-1; y++) {
-                for (int x=0; x<width-1; x++) {
-                    boxes[y, x] = new Box(
-                        nodes[y,x],
-                        nodes[y,x+1],
-                        nodes[y+1,x+1],
-                        nodes[y+1,x]
-                        );
-                }
+        private void GameOver() {
+            Debug.Log("Game Over");
+            isPlaying = false;
+        }
+
+        private void SetPlayerTurn() {
+            turn.RandomizePlayerTurn();
+            OnPlayerTurnSet?.Invoke(turn.playerTurn);
+        }
+
+        internal void StartGame() {
+            isPlaying = true;
+        }
+
+        public void GainScore(int point) {
+            if (turn.playerTurn == PlayerLabel.Player_1) {
+                //add score to player 1
+                scoreManager.AddScorePlayer1(point);
+            } else {
+                //add score to player 2
+                scoreManager.AddScorePlayer2(point);
             }
-        }
-
-        private void RegisterAllowedConnection() {
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    if (x > 0) {
-                        nodes[y, x].AddAllowedConnection(nodes[y, x-1]);
-                    }
-                    if (y > 0) {
-                        nodes[y, x].AddAllowedConnection(nodes[y-1, x]);
-                    }
-                    if (x < width-1) {
-                        nodes[y, x].AddAllowedConnection(nodes[y, x + 1]);
-                    }
-                    if (y < height - 1) {
-                        nodes[y, x].AddAllowedConnection(nodes[y + 1, x]);
-                    }
-                }
-            }
-        }
-
-        private void GenerateNode() {
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    nodes[y, x] = Instantiate(nodePrefab, transform).GetComponent<Node>();
-                    nodes[y, x].SetPosition(GetWorldPosition(x, y));
-                }
-            }
-        }
-
-        private Vector3 GetWorldPosition(int x, int y) {
-            Vector3 pos = new Vector3();
-            pos.x = (float)x * 2f - (float)(width-1);
-            pos.y = (float)y * 2f - (float)(height-1);
-
-            return pos;
         }
     }
 }

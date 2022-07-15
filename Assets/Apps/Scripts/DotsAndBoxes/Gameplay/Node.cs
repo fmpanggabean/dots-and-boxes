@@ -13,7 +13,8 @@ namespace DotsAndBoxes.Gameplay
         private LineRenderer[] lineRenderer;
         private int currentLine;
 
-        public event Action<Node, Node> OnConnect;
+        public event Action<Node, Node> OnConnect_Node_Node;
+        public event Action OnConnect;
 
         private void Awake() {
             lineRenderer = GetComponentsInChildren<LineRenderer>();
@@ -65,7 +66,8 @@ namespace DotsAndBoxes.Gameplay
             connectionList.Add(endNode);
             endNode.connectionList.Add(this);
 
-            OnConnect?.Invoke(this, endNode);
+            OnConnect_Node_Node?.Invoke(this, endNode);
+            OnConnect?.Invoke();
             MoveToNextLineRenderer();
         }
 
