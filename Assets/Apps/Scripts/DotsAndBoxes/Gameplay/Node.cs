@@ -30,11 +30,9 @@ namespace DotsAndBoxes.Gameplay
 
         internal bool IsAvailableToConnectTo(Node endNode) {
             if (connectionList.Contains(endNode)) {
-                Debug.Log("Unable to connect. Start Node already contain End Node");
                 return false;
             } 
             if (endNode.connectionList.Contains(this)) {
-                Debug.Log("Unable to connect. End Node already contain Start Node");
                 return false;
             }
             return true;
