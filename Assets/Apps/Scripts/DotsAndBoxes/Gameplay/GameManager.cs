@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace DotsAndBoxes.Gameplay {
     public class GameManager : MonoBehaviour {
         public ScoreManager scoreManager;
+        public PlayerInput playerInput;
         public PlayerTurn turn;
         public Board board;
 
         private bool isPlaying;
 
         public event Action<PlayerLabel> OnPlayerTurnSet;
+        public event Action<PlayerLabel, int, int> OnGameOver;
 
         public GameManager () {
             turn = new PlayerTurn();
@@ -25,7 +28,13 @@ namespace DotsAndBoxes.Gameplay {
 
         private void GameOver() {
             Debug.Log("Game Over");
+            playerInput.Disable();
             isPlaying = false;
+            OnGameOver?.Invoke(turn.playerTurn, scoreManager.player1, scoreManager.player2);
+        }
+
+        internal void PlayAgain() {
+            SceneManager.LoadScene(0);
         }
 
         private void SetPlayerTurn() {
@@ -35,6 +44,7 @@ namespace DotsAndBoxes.Gameplay {
 
         internal void StartGame() {
             isPlaying = true;
+            playerInput.Enable();
         }
 
         public void GainScore(int point) {

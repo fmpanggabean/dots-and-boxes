@@ -28,6 +28,7 @@ namespace DotsAndBoxes.Gameplay
             nodes = new Node[height, width];
             boxes = new Box[height - 1, width - 1];
         }
+
         private void GenerateBox() {
             for (int y=0; y<height-1; y++) {
                 for (int x=0; x<width-1; x++) {

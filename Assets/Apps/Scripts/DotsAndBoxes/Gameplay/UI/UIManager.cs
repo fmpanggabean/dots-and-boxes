@@ -18,6 +18,8 @@ namespace DotsAndBoxes.Gameplay.UI
             gameManager.turn.OnTurnChanged += GetUI<PlayerTurnUI>().Show;
             gameManager.scoreManager.OnPlayer1ScoreAdded += GetUI<ScoreUI>().ShowPlayer1Score;
             gameManager.scoreManager.OnPlayer2ScoreAdded += GetUI<ScoreUI>().ShowPlayer2Score;
+            gameManager.OnGameOver += GetUI<GameOverUI>().ShowReport;
+            GetUI<GameOverUI>().playAgainButton.onClick.AddListener(gameManager.PlayAgain);
         }
 
         private T GetUI<T>() where T : BaseUI {
