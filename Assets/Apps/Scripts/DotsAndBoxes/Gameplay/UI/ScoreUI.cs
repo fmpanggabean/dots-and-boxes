@@ -6,10 +6,16 @@ using System;
 
 namespace DotsAndBoxes.Gameplay.UI
 {
-    public class ScoreUI : BaseUI
-    {
+    public class ScoreUI : BaseUI, IScoreManager {
         public TMP_Text player1Score;
         public TMP_Text player2Score;
+
+        public ScoreManager ScoreManager => FindObjectOfType<ScoreManager>();
+
+        private void Start() {
+            ScoreManager.OnPlayer1ScoreAdded += ShowPlayer1Score;
+            ScoreManager.OnPlayer2ScoreAdded += ShowPlayer2Score;
+        }
 
         internal void ShowPlayer1Score(int score) {
             player1Score.text = score.ToString();

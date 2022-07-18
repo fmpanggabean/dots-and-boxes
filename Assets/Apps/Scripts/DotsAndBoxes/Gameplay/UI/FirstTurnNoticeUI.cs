@@ -5,13 +5,18 @@ using UnityEngine;
 
 namespace DotsAndBoxes.Gameplay
 {
-    public class FirstTurnNoticeUI : BaseUI
-    {
+    public class FirstTurnNoticeUI : BaseUI, IGameManager {
         public GameObject player1Side;
         public GameObject player2Side;
 
+        public GameManager GameManager => FindObjectOfType<GameManager>();
+
         public event Action OnStartGame;
 
+        private void Awake() {
+            GameManager.OnPlayerTurnSet += ShowFirstTurn;
+            OnStartGame += GameManager.StartGame;
+        }
         public void ShowFirstTurn(PlayerLabel label) {
             if(label == PlayerLabel.Player_1) {
                 player1Side.SetActive(true);
