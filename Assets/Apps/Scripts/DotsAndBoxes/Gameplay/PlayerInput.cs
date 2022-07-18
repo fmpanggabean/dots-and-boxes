@@ -10,7 +10,13 @@ namespace DotsAndBoxes.Gameplay
         public Node startNode;
         public Node endNode;
 
+        public bool isEnabled { get; private set; }
+
         private void Update() {
+            if (!isEnabled) {
+                return;
+            }
+
             if (Input.GetMouseButtonDown(0)) {
                 startNode = MouseOnNode();
                 
@@ -36,6 +42,14 @@ namespace DotsAndBoxes.Gameplay
             if (startNode) {
                 startNode.DrawLineTo(GetMouseInWorldPosition());
             }
+        }
+
+        internal void Disable() {
+            isEnabled = false;
+        }
+
+        internal void Enable() {
+            isEnabled = true;
         }
 
         private void EndDraw() {
