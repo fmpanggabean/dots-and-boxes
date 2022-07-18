@@ -1,0 +1,22 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.UI;
+
+namespace DotsAndBoxes.Gameplay
+{
+    public class GameOverUI : BaseUI
+    {
+        public GameReportUI player1Report;
+        public GameReportUI player2Report;
+        public Button playAgainButton;
+
+        private void Start() {
+            Hide();
+        }
+        public void ShowReport(PlayerLabel winner, int scoreP1, int scoreP2) {
+            Show();
+            player1Report.ShowMessage(winner, scoreP1);
+            player2Report.ShowMessage(winner, scoreP2);
+        }
+    }
+}

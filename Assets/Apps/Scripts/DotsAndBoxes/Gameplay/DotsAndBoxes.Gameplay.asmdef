@@ -1,7 +1,10 @@
 {
     "name": "DotsAndBoxes.Gameplay",
     "rootNamespace": "DotsAndBoxes.Gameplay",
-    "references": [],
+    "references": [
+        "GUID:691242991dfac1f408e74354d8dd6daf",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
